@@ -1,45 +1,30 @@
-//Require mongoose package
 const mongoose = require('mongoose');
-const mongoosePaginate = require('mongoose-paginate');
 
-//Define BucketlistSchema with title, description and category
 let ProductSchema = new mongoose.Schema({
-    title: {
+    name: {
         type: String,
         required: true
     },
-    description: {
+    quantity: {
         type: String,
-        required: false
+        required: true
     },
-    category: {
+    price: {
         type: String,
-        required: true,
-        enum: ['high', 'medium', 'low']
-    },
-    module: {
-        type: String,
-        required: true,
-        enum: ['client', 'clientAdmin', 'support', 'supportAdmin', 'seller', 'sellerAdmin']
+        required: true
     }
 });
-ProductSchema.plugin(mongoosePaginate);
 
 const ProductList = module.exports = mongoose.model('ProductList', ProductSchema);
 
-//BucketList.find() returns all the lists
-module.exports.getAllProducts = (query, callback) => {
-    const sort = query.sort;
-    const order = query.order;
-    const page = query.page;
-    const limitTo = query.limitTo;
+module.exports.getAllProducts = (callback) => {
     try {
-        console.log("backend/models/Task.js | getAllTasks");
-        ProductList.paginate({}, { sort: { [sort]: order }, page: page, limit: +limitTo }, function (err, result) {
+        ProductList.find(function (err, result) {
             if (err) {
                 callback(err, null);
             }
-            callback(null, result.docs, result.total);
+            console.log(result);
+            callback(null, result);
         });
     } catch (err) {
         console.log('err', err);
@@ -51,8 +36,8 @@ module.exports.getProductById = (id, callback) => {
     ProductList.find(query, callback);
 };
 
-module.exports.addProduct = (newTask, callback) => {
-    newTask.save(callback);
+module.exports.addProduct = (newProduct, callback) => {
+    newProduct.save(callback);
 };
 
 module.exports.deleteProductById = (id, callback) => {
@@ -60,13 +45,12 @@ module.exports.deleteProductById = (id, callback) => {
     ProductList.remove(query, callback);
 };
 
-module.exports.updateById = (id, updatedTask, callback) => {
+module.exports.updateById = (id, updatedProduct, callback) => {
     ProductList.findByIdAndUpdate(id, {
         $set: {
-            title: updatedTask.title,
-            description: updatedTask.description,
-            category: updatedTask.category,
-            module: updatedTask.module
+            name: updatedProduct.name,
+            quantity: updatedProduct.quantity,
+            price: updatedProduct.price
         }
     }, {
         new: true

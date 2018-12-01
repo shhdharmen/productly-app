@@ -1,10 +1,18 @@
 const mongoose = require('mongoose');
-
-module.exports.connect = function () {
-    mongoose.connect('mongodb://localhost/productly-app-db');
-    var db = mongoose.connection;
-    db.on('error', console.error.bind(console, 'connection error:'));
-    db.once('open', function () {
-        console.log('Successfully connected to db.');
-    });
-};
+const server = '127.0.0.1:27017'; // REPLACE WITH YOUR DB SERVER
+const database = 'productly-app-db';      // REPLACE WITH YOUR DB NAME
+class Database {
+    constructor() {
+        this._connect();
+    }
+    _connect() {
+        mongoose.connect(`mongodb://${server}/${database}`)
+            .then(() => {
+                console.log('Database connection successful')
+            })
+            .catch(err => {
+                console.error('Database connection error')
+            });
+    }
+}
+module.exports = new Database();

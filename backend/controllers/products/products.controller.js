@@ -3,9 +3,9 @@ const express = require('express');
 const router = express.Router();
 const product = require('../../models/product');
 
-// GET HTTP sorted and paginated data
+// GET HTTP data
 router.get('/', (req, res) => {
-    product.getAllProducts(req.query, (err, products, totalProducts) => {
+    product.getAllProducts(req.query, (err, products) => {
         if (err) {
             res.status(501).json({
                 success: false,
@@ -14,8 +14,7 @@ router.get('/', (req, res) => {
         } else {
             res.status(200).write(JSON.stringify({
                 success: true,
-                tasks: products,
-                totalTasks: totalProducts
+                products: products
             }, null, 2));
             res.end();
 
@@ -23,15 +22,13 @@ router.get('/', (req, res) => {
     });
 });
 
-// GET HTTP id data
 router.get('/:id', (req, res) => {
-    //access the parameter which is the id of the item to be deleted
     let id = req.params.id;
     product.getProductById(id, (err, tasks) => {
         if (err) {
             res.status(501).json({
                 success: false,
-                message: `Failed to load single task. Error: ${err}`
+                message: `Failed to load single product. Error: ${err}`
             });
         } else {
             res.status(200).write(JSON.stringify({
@@ -44,7 +41,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
-//POST HTTP method to add task
+//POST HTTP method to add product
 router.post('/', (req, res, next) => {
     let newTask = new product({
         title: req.body.title,
@@ -56,7 +53,7 @@ router.post('/', (req, res, next) => {
         if (err) {
             res.status(501).json({
                 success: false,
-                message: `Failed to create a new task. Error: ${err}`
+                message: `Failed to create a new product. Error: ${err}`
             });
 
         } else
@@ -68,16 +65,16 @@ router.post('/', (req, res, next) => {
     });
 });
 
-//DELETE HTTP method to delete task. Here, we pass in a param which is the object id.
+//DELETE HTTP method to delete product. Here, we pass in a param which is the object id.
 router.delete('/:id', (req, res, next) => {
     //access the parameter which is the id of the item to be deleted
     let id = req.params.id;
-    //Call the model method deleteListById
+    //Call the model method deleteProductById
     product.deleteProductById(id, (err, list) => {
         if (err) {
             res.status(501).json({
                 success: false,
-                message: `Failed to delete the task. Error: ${err}`
+                message: `Failed to delete the product. Error: ${err}`
             });
         } else if (list) {
             res.status(200).json({
@@ -87,22 +84,22 @@ router.delete('/:id', (req, res, next) => {
         } else {
             res.status(501).json({
                 success: false,
-                message: `Failed to delete the task. Unknown Error.`
+                message: `Failed to delete the product. Unknown Error.`
             });
         }
     });
 });
 
-//PUT HTTP method to update task. Here, we pass in id and updated task in body.
+//PUT HTTP method to update product. Here, we pass in id and updated product in body.
 router.put('/:id', (req, res, next) => {
     let id = req.params.id;
-    product.updateById(id, req.body.task, (err, updatedTask) => {
+    product.updateById(id, req.body.product, (err, updatedProduct) => {
         if (err) {
             res.status(501).json({
                 success: false,
-                message: `Failed to update the task. Error: ${err}`
+                message: `Failed to update the product. Error: ${err}`
             });
-        } else if (updatedTask) {
+        } else if (updatedProduct) {
             res.status(200).json({
                 success: true,
                 message: "Updated successfully"
@@ -110,7 +107,7 @@ router.put('/:id', (req, res, next) => {
         } else {
             res.status(501).json({
                 success: false,
-                message: `Failed to update the task. Unknown Error.`
+                message: `Failed to update the product. Unknown Error.`
             });
         }
     })
