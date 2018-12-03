@@ -6,11 +6,11 @@ let ProductSchema = new mongoose.Schema({
         required: true
     },
     quantity: {
-        type: String,
+        type: Number,
         required: true
     },
     price: {
-        type: String,
+        type: Number,
         required: true
     }
 });
@@ -23,11 +23,10 @@ module.exports.getAllProducts = (callback) => {
             if (err) {
                 callback(err, null);
             }
-            console.log(result);
             callback(null, result);
         });
     } catch (err) {
-        console.log('err', err);
+        callback(err, null);
     }
 };
 
@@ -37,7 +36,13 @@ module.exports.getProductById = (id, callback) => {
 };
 
 module.exports.addProduct = (newProduct, callback) => {
-    newProduct.save(callback);
+    newProduct.save(function (err, product) {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(null, product);
+        }
+    });
 };
 
 module.exports.deleteProductById = (id, callback) => {
@@ -53,6 +58,6 @@ module.exports.updateById = (id, updatedProduct, callback) => {
             price: updatedProduct.price
         }
     }, {
-        new: true
-    }, callback);
+            new: true
+        }, callback);
 };

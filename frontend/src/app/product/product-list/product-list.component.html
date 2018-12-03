@@ -1,0 +1,37 @@
+<div class="row">
+  <div class="col-5">
+    <div class="jumbotron position-sticky">
+      <h1 class="display-3">List of Products</h1>
+      <p class="lead">You can see all products' live updates here.</p>
+      <hr class="my-2">
+      <p>Whenever any new product is added or any existing product is updated, it will updated live here.</p>
+      <p class="lead">
+        <a class="btn btn-primary btn-lg" role="button" [routerLink]="['../add']">Add New Product</a>
+      </p>
+    </div>
+  </div>
+  <div class="col">
+    <div class="table-responsive">
+      <table class="table table-sm table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Product Name</th>
+            <th class="text-right">Quantity</th>
+            <th class="text-right">Price</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of products; index as i" [ngClass]="{'new-product': newFlag === product._id}">
+            <td>{{i+1}}</td>
+            <td>{{product.name}}</td>
+            <td class="text-right">{{product.quantity}}</td>
+            <td class="text-right">{{product.price}}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

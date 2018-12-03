@@ -5,7 +5,7 @@ const product = require('../../models/product');
 
 // GET HTTP data
 router.get('/', (req, res) => {
-    product.getAllProducts(req.query, (err, products) => {
+    product.getAllProducts((err, products) => {
         if (err) {
             res.status(501).json({
                 success: false,
@@ -43,13 +43,12 @@ router.get('/:id', (req, res) => {
 
 //POST HTTP method to add product
 router.post('/', (req, res, next) => {
-    let newTask = new product({
-        title: req.body.title,
-        description: req.body.description,
-        category: req.body.category,
-        module: req.body.module
+    let newProduct = new product({
+        name: req.body.name,
+        price: req.body.price,
+        quantity: req.body.quantity
     });
-    product.addProduct(newTask, (err, list) => {
+    product.addProduct(newProduct, (err, product) => {
         if (err) {
             res.status(501).json({
                 success: false,
@@ -59,7 +58,8 @@ router.post('/', (req, res, next) => {
         } else
             res.status(200).json({
                 success: true,
-                message: "Added successfully."
+                message: "Added successfully.",
+                product: product
             });
 
     });

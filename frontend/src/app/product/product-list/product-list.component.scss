@@ -1,0 +1,16 @@
+@keyframes new-product {
+    from {
+        background: green;
+    }
+    to {
+        background: #fff;
+    }
+}
+
+.new-product {
+    animation-name: new-product;
+    animation-direction: normal;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear;
+}
