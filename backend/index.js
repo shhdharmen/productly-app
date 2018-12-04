@@ -10,7 +10,7 @@ const port = 3031;
 const app = express();
 var http = require('http').Server(app);
 
-const io = require('socket.io')(http);
+const io = require('./socket')(http);
 //Middlewares for bodyparsing using both json and urlencoding
 app.use(bodyParser.urlencoded({
     extended: true
@@ -25,7 +25,7 @@ app.get('/', (req, res) => res.send('Invalid Page!'));
 
 
 //Routing all HTTP requests to /product to product controller
-app.use('/products', productsCtrl);
+app.use('/products', productsCtrl(io));
 
 
 // global error handler
@@ -33,11 +33,4 @@ app.use(errorHandler);
 
 http.listen(port, () => {
     console.log('Server listening on port ' + port);
-});
-
-io.on('connection', function (socket) {
-    console.log('a user connected');
-    socket.on('newProduct', function (newProduct) {
-        io.emit('newProduct', newProduct);
-    });
 });

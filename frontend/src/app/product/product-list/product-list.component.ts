@@ -10,6 +10,7 @@ import { ProductListService } from 'src/app/core/services/components/product/pro
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
   newFlag: string;
+  updateFlag: string;
   constructor(private productListService: ProductListService) { }
 
   ngOnInit() {
@@ -20,6 +21,10 @@ export class ProductListComponent implements OnInit {
     this.productListService.newProduct$.subscribe(product => {
       this.newFlag = product._id;
       this.products.push(product);
+    });
+    this.productListService.updateProduct$.subscribe(product => {
+      this.updateFlag = product._id;
+      this.products.splice(this.products.findIndex(value => value._id === product._id), 1, product);
     });
   }
 

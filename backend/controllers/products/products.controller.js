@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const product = require('../../models/product');
+let socketIO;
 
 // GET HTTP data
 router.get('/', (req, res) => {
@@ -61,6 +62,7 @@ router.post('/', (req, res, next) => {
                 message: "Added successfully.",
                 product: product
             });
+        socketIO.emit('newProduct', product);
 
     });
 });
@@ -113,4 +115,9 @@ router.put('/:id', (req, res, next) => {
     })
 });
 
-module.exports = router;
+module.exports = function (io) {
+    socketIO = io;
+    socketIO.on('connection', function (socket) {
+    });
+    return router;
+};

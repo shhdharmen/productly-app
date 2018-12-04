@@ -30,7 +30,6 @@ export class ProductAddComponent implements OnInit {
     }
     this.productAddService.add(this.productForm.value).subscribe(data => {
       this.toastr.success(null, data.message);
-      this.socket.emit('newProduct', data.product);
     });
   }
 

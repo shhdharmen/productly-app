@@ -12,6 +12,8 @@ import { Subject } from 'rxjs';
 export class ProductListService {
   private newProduct = new Subject<Product>();
   newProduct$ = this.newProduct.asObservable();
+  private updateProduct = new Subject<Product>();
+  updateProduct$ = this.updateProduct.asObservable();
   private API_URL = environment.apiUrl;
 
   constructor(private http: HttpClient,
@@ -27,6 +29,14 @@ export class ProductListService {
       .fromEvent('newProduct')
       .subscribe((data: Product) => {
         this.newProduct.next(data);
+      });
+  }
+
+  getUpdatedProductsLive() {
+    return this.socket
+      .fromEvent('updateProduct')
+      .subscribe((data: Product) => {
+        this.updateProduct.next(data);
       });
   }
 }
