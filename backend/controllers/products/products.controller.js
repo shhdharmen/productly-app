@@ -69,7 +69,6 @@ router.post('/', (req, res, next) => {
 
 //PUT HTTP method to update product. Here, we pass in id and updated product in body.
 router.put('/:id', (req, res, next) => {
-    console.log("put received");
     let id = req.params.id;
     product.updateById(id, req.body.product, (err, updatedProduct) => {
         if (err) {
