@@ -45,11 +45,6 @@ module.exports.addProduct = (newProduct, callback) => {
     });
 };
 
-module.exports.deleteProductById = (id, callback) => {
-    let query = { _id: id };
-    ProductList.remove(query, callback);
-};
-
 module.exports.updateById = (id, updatedProduct, callback) => {
     ProductList.findByIdAndUpdate(id, {
         $set: {
@@ -59,5 +54,11 @@ module.exports.updateById = (id, updatedProduct, callback) => {
         }
     }, {
             new: true
-        }, callback);
+        }, function (err, res) {
+            if (err) {
+                callback(err, null)
+            } else {
+                callback(null, res);
+            }
+        });
 };

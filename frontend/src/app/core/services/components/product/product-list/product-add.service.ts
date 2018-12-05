@@ -15,4 +15,9 @@ export class ProductAddService {
     return this.http.post<{ success: boolean, message: string, product: Product }>
       (`${this.API_URL}/products`, product);
   }
+
+  update(id: string, product: Product) {
+    return this.http.put<{ success: boolean, message: string }>(`${this.API_URL}/products/${encodeURIComponent(id)}`,
+      { product: product });
+  }
 }

@@ -25,7 +25,7 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
     let id = req.params.id;
-    product.getProductById(id, (err, tasks) => {
+    product.getProductById(id, (err, products) => {
         if (err) {
             res.status(501).json({
                 success: false,
@@ -34,7 +34,7 @@ router.get('/:id', (req, res) => {
         } else {
             res.status(200).write(JSON.stringify({
                 success: true,
-                tasks: tasks
+                products: products
             }, null, 2));
             res.end();
 
@@ -67,33 +67,9 @@ router.post('/', (req, res, next) => {
     });
 });
 
-//DELETE HTTP method to delete product. Here, we pass in a param which is the object id.
-router.delete('/:id', (req, res, next) => {
-    //access the parameter which is the id of the item to be deleted
-    let id = req.params.id;
-    //Call the model method deleteProductById
-    product.deleteProductById(id, (err, list) => {
-        if (err) {
-            res.status(501).json({
-                success: false,
-                message: `Failed to delete the product. Error: ${err}`
-            });
-        } else if (list) {
-            res.status(200).json({
-                success: true,
-                message: "Deleted successfully"
-            });
-        } else {
-            res.status(501).json({
-                success: false,
-                message: `Failed to delete the product. Unknown Error.`
-            });
-        }
-    });
-});
-
 //PUT HTTP method to update product. Here, we pass in id and updated product in body.
 router.put('/:id', (req, res, next) => {
+    console.log("put received");
     let id = req.params.id;
     product.updateById(id, req.body.product, (err, updatedProduct) => {
         if (err) {
@@ -106,6 +82,7 @@ router.put('/:id', (req, res, next) => {
                 success: true,
                 message: "Updated successfully"
             });
+            socketIO.emit('updateProduct', updatedProduct);
         } else {
             res.status(501).json({
                 success: false,

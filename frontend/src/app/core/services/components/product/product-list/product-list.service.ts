@@ -17,11 +17,16 @@ export class ProductListService {
   private API_URL = environment.apiUrl;
 
   constructor(private http: HttpClient,
-    private socket: Socket) { }
+    private socket: Socket) {
+  }
 
   getAllProducts() {
     return this.http.get<{ success: boolean, products: Product[] }>
       (`${this.API_URL}/products`);
+  }
+
+  get(id: string) {
+    return this.http.get<{ success: boolean, products: Product[] }>(`${this.API_URL}/products/${encodeURIComponent(id)}`);
   }
 
   getNewProductsLive() {
@@ -38,5 +43,12 @@ export class ProductListService {
       .subscribe((data: Product) => {
         this.updateProduct.next(data);
       });
+  }
+
+  destroying() {
+    this.newProduct.unsubscribe();
+    this.updateProduct.unsubscribe();
+    this.socket.removeAllListeners();
+    this.socket.disconnect();
   }
 }
